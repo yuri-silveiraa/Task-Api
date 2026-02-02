@@ -18,4 +18,24 @@ class TaskService
             ...$data
         ]);
     }
+    
+     public function update(int $taskId, int $userId, array $data)
+    {
+        $task = Task::where('id', $taskId)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+
+        $task->update($data);
+
+        return $task;
+    }
+
+    public function delete(int $taskId, int $userId): void
+    {
+        $task = Task::where('id', $taskId)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+
+        $task->delete();
+    }
 }

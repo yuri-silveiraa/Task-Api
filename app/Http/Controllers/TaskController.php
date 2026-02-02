@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskStoreRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use App\Services\TaskService;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -28,5 +28,23 @@ class TaskController extends Controller
         );
 
         return response()->json($task, 201);
+    }
+
+    public function update(TaskUpdateRequest $request, int $id)
+    {
+        $task = $this->taskService->update(
+            $id,
+            auth()->id(),
+            $request->validated()
+        );
+
+        return response()->json($task, 200);
+    }
+
+    public function destroy(int $id)
+    {
+        $this->taskService->delete($id, auth()->id());
+
+        return response()->json(null, 204);
     }
 }
