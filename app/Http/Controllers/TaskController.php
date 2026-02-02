@@ -51,7 +51,7 @@ class TaskController extends Controller
     {
         $this->authorize('delete', $task);
 
-        $this->taskService->delete($task->id, auth()->id());
+        $this->taskService->delete($task);
 
         return response()->json(null, 204);
     }
