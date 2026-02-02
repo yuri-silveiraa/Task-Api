@@ -39,7 +39,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $token = auth('api')->attempt($credentials);
+        $token = JWTAuth::attempt($credentials);
 
         if (!$token) {
             return response()->json([
@@ -60,7 +60,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth()->logout();
+        JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json([
             'message' => 'Logout realizado com sucesso'
