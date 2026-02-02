@@ -8,7 +8,7 @@ class TaskService
 {
     public function list()
     {
-        return Task::where('user_id', auth()->id())->get();
+        return Task::all();
     }
 
     public function create(int $userId, array $data)
@@ -19,23 +19,15 @@ class TaskService
         ]);
     }
     
-     public function update(int $taskId, int $userId, array $data)
+     public function update(Task $task, array $data)
     {
-        $task = Task::where('id', $taskId)
-            ->where('user_id', $userId)
-            ->firstOrFail();
-
         $task->update($data);
 
         return $task;
     }
 
-    public function delete(int $taskId, int $userId): void
+    public function delete(Task $task): void
     {
-        $task = Task::where('id', $taskId)
-            ->where('user_id', $userId)
-            ->firstOrFail();
-
         $task->delete();
     }
 }

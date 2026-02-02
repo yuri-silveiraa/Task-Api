@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Requests\TaskUpdateRequest;
+use App\Models\Task;
 use App\Services\TaskService;
 
 class TaskController extends Controller
@@ -14,6 +15,8 @@ class TaskController extends Controller
 
     public function index()
     {
+        $this->authorize('viewAny', Task::class);
+
         return response()->json(
             $this->taskService->list(),
             200
@@ -22,6 +25,8 @@ class TaskController extends Controller
 
     public function store(TaskStoreRequest $request)
     {
+        $this->authorize('create', Task::class);
+
         $task = $this->taskService->create(
             auth()->id(),
             $request->validated()
@@ -30,20 +35,23 @@ class TaskController extends Controller
         return response()->json($task, 201);
     }
 
-    public function update(TaskUpdateRequest $request, int $id)
+    public function update(TaskUpdateRequest $request, Task $task)
     {
+        $this->authorize('update', $task);
+
         $task = $this->taskService->update(
-            $id,
-            auth()->id(),
+            $task,
             $request->validated()
         );
 
         return response()->json($task, 200);
     }
 
-    public function destroy(int $id)
+    public function destroy(Task $task)
     {
-        $this->taskService->delete($id, auth()->id());
+        $this->authorize('delete', $task);
+
+        $this->taskService->delete($task->id, auth()->id());
 
         return response()->json(null, 204);
     }
